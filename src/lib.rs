@@ -37,15 +37,15 @@
 //!
 //! | Feature | Types | Dependencies |
 //! |---------|-------|--------------|
-//! | `email` (default) | [`Email`](crate::email::Email) | `email_address` |
-//! | `url` (default) | [`Url`](crate::url::Url), [`HttpUrl`](crate::url::HttpUrl), [`SecureUrl`](crate::url::SecureUrl) | `url` |
-//! | `uuid` | [`Uuid`](crate::uuid::Uuid), [`UuidV4`](crate::uuid::UuidV4), [`UuidV7`](crate::uuid::UuidV7) | `uuid` |
-//! | `phone` | [`PhoneNumber`](crate::phone::PhoneNumber) | `phonenumber` |
-//! | `financial` | [`Iban`](crate::financial::Iban), [`CreditCardNumber`](crate::financial::CreditCardNumber) | `iban_validate`, `creditcard` |
-//! | `network` | [`Ipv4Addr`](crate::network::Ipv4Addr), [`Ipv6Addr`](crate::network::Ipv6Addr), [`DomainName`](crate::network::DomainName), [`Port`](crate::network::Port) | - |
-//! | `geo` | [`Latitude`](crate::geo::Latitude), [`Longitude`](crate::geo::Longitude) | - |
-//! | `numeric` | [`Percentage`](crate::numeric::Percentage), [`UnitInterval`](crate::numeric::UnitInterval) | - |
-//! | `identifiers` | [`Slug`](crate::identifiers::Slug) | - |
+//! | `email` (default) | `Email` | `email_address` |
+//! | `url` (default) | `Url`, `HttpUrl`, `SecureUrl` | `url` |
+//! | `uuid` | `Uuid`, `UuidV4`, `UuidV7` | `uuid` |
+//! | `phone` | `PhoneNumber` | `phonenumber` |
+//! | `financial` | `Iban`, `CreditCardNumber` | `iban_validate`, `creditcard` |
+//! | `network` | `Ipv4Addr`, `Ipv6Addr`, `DomainName`, `Port` | - |
+//! | `geo` | `Latitude`, `Longitude` | - |
+//! | `numeric` | `Percentage`, `UnitInterval` | - |
+//! | `identifiers` | `Slug` | - |
 //! | `serde` | Serialize/Deserialize for all types | - |
 //! | `full` | All of the above | - |
 //!
