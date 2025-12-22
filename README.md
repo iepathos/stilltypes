@@ -40,6 +40,10 @@ stilltypes = { version = "0.1", default-features = false, features = ["email", "
 | `uuid` | `Uuid`, `UuidV4`, `UuidV7` | `uuid` |
 | `phone` | `PhoneNumber` | `phonenumber` |
 | `financial` | `Iban`, `CreditCardNumber` | `iban_validate`, `creditcard` |
+| `network` | `Ipv4Addr`, `Ipv6Addr`, `DomainName`, `Port` | - |
+| `geo` | `Latitude`, `Longitude` | - |
+| `numeric` | `Percentage`, `UnitInterval` | - |
+| `identifiers` | `Slug` | - |
 | `serde` | Serialize/Deserialize for all types | - |
 | `full` | All of the above | - |
 
@@ -170,6 +174,84 @@ assert_eq!(card.masked(), "****1111"); // For display
 assert_eq!(card.last_four(), "1111");
 ```
 
+### Network (IP, Domain, Port)
+
+```rust,ignore
+use stilltypes::network::{Ipv4Addr, Ipv6Addr, Port, DomainName, Ipv4Ext, PortExt};
+
+// IPv4 validation with semantic helpers
+let ip = Ipv4Addr::new("192.168.1.1".to_string())?;
+assert!(ip.is_private());
+assert!(!ip.is_loopback());
+
+// IPv6 validation
+let ipv6 = Ipv6Addr::new("::1".to_string())?;
+assert!(ipv6.is_loopback());
+
+// Port validation with IANA range classification
+let port = Port::new(443)?;
+assert!(port.is_privileged());
+assert!(port.is_well_known());
+
+// Domain name validation (RFC 1035)
+let domain = DomainName::new("api.example.com".to_string())?;
+assert_eq!(domain.tld(), Some("com"));
+```
+
+### Geographic Coordinates
+
+```rust,ignore
+use stilltypes::geo::{Latitude, Longitude, LatitudeExt, LongitudeExt};
+
+// Latitude validates range -90 to 90 degrees
+let lat = Latitude::new(37.7749)?;
+assert!(lat.is_north());
+
+// Longitude validates range -180 to 180 degrees
+let lon = Longitude::new(-122.4194)?;
+assert!(lon.is_west());
+
+// Convert to degrees, minutes, seconds
+let (deg, min, sec, hemi) = lat.to_dms();
+// 37° 46' 29.64" N
+```
+
+### Bounded Numerics
+
+```rust,ignore
+use stilltypes::numeric::{Percentage, UnitInterval, PercentageExt, UnitIntervalExt};
+
+// Percentage validates range 0 to 100
+let discount = Percentage::new(25.0)?;
+let price = 100.0;
+let discounted = price - discount.of(price);  // 75.0
+
+// Convert between representations
+let probability = UnitInterval::new(0.75)?;
+let as_percent = probability.to_percentage();  // 75%
+
+// Create from decimal
+let half = Percentage::from_decimal(0.5)?;  // 50%
+```
+
+### URL Slugs
+
+```rust,ignore
+use stilltypes::identifiers::{Slug, SlugExt};
+
+// Validate existing slug
+let slug = Slug::new("my-first-post".to_string())?;
+assert_eq!(slug.get(), "my-first-post");
+
+// Convert from title
+let slug = Slug::from_title("My First Blog Post!")?;
+assert_eq!(slug.get(), "my-first-blog-post");
+
+// Error on invalid slugs
+let invalid = Slug::new("Invalid Slug".to_string());
+assert!(invalid.is_err());
+```
+
 ## When to Use Stilltypes
 
 **Use Stilltypes when:**
@@ -198,12 +280,20 @@ See the `examples/` directory for complete working examples:
 
 - `form_validation.rs` - Error accumulation with `Validation::all()`
 - `api_handler.rs` - Effect composition with `from_validation()`
+- `network_validation.rs` - Server config validation with IP/port/domain
+- `geo_validation.rs` - Geographic coordinate validation with DMS conversion
+- `discount_validation.rs` - Percentage and pricing calculations with numeric types
+- `slug_validation.rs` - URL slug validation and title conversion
 
 Run with:
 
 ```bash
 cargo run --example form_validation --features full
 cargo run --example api_handler --features full
+cargo run --example network_validation --features full
+cargo run --example geo_validation --features full
+cargo run --example discount_validation --features full
+cargo run --example slug_validation --features full
 ```
 
 ## The Stillwater Ecosystem

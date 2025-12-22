@@ -133,7 +133,11 @@ fn main() {
         Validation::Success(ValidPaymentMethod::Card { number, name }) => {
             println!("Payment method valid!");
             println!("  Cardholder: {}", name);
-            println!("  Card: {} (last 4: {})", number.masked(), number.last_four());
+            println!(
+                "  Card: {} (last 4: {})",
+                number.masked(),
+                number.last_four()
+            );
         }
         Validation::Success(_) => unreachable!(),
         Validation::Failure(errors) => {
@@ -155,7 +159,11 @@ fn main() {
     match validate_payment(bank_payment) {
         Validation::Success(ValidPaymentMethod::BankTransfer { iban, bic }) => {
             println!("Payment method valid!");
-            println!("  IBAN: {} (country: {})", iban.masked(), iban.country_code());
+            println!(
+                "  IBAN: {} (country: {})",
+                iban.masked(),
+                iban.country_code()
+            );
             println!("  BIC: {}", bic);
         }
         Validation::Success(_) => unreachable!(),
@@ -248,12 +256,12 @@ fn main() {
     // Example 7: Various card formats
     println!("\n=== Card Format Variations ===");
     let formats = [
-        "4111111111111111",       // No separators
-        "4111 1111 1111 1111",    // Spaces
-        "4111-1111-1111-1111",    // Dashes
-        "5500000000000004",       // Mastercard
-        "340000000000009",        // Amex (15 digits)
-        "4111111111111112",       // Invalid (Luhn fails)
+        "4111111111111111",    // No separators
+        "4111 1111 1111 1111", // Spaces
+        "4111-1111-1111-1111", // Dashes
+        "5500000000000004",    // Mastercard
+        "340000000000009",     // Amex (15 digits)
+        "4111111111111112",    // Invalid (Luhn fails)
     ];
 
     for card in formats {

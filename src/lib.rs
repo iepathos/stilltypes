@@ -42,6 +42,10 @@
 //! | `uuid` | [`Uuid`](uuid::Uuid), [`UuidV4`](uuid::UuidV4), [`UuidV7`](uuid::UuidV7) | `uuid` |
 //! | `phone` | [`PhoneNumber`](phone::PhoneNumber) | `phonenumber` |
 //! | `financial` | [`Iban`](financial::Iban), [`CreditCardNumber`](financial::CreditCardNumber) | `iban_validate`, `creditcard` |
+//! | `network` | [`Ipv4Addr`](network::Ipv4Addr), [`Ipv6Addr`](network::Ipv6Addr), [`DomainName`](network::DomainName), [`Port`](network::Port) | - |
+//! | `geo` | [`Latitude`](geo::Latitude), [`Longitude`](geo::Longitude) | - |
+//! | `numeric` | [`Percentage`](numeric::Percentage), [`UnitInterval`](numeric::UnitInterval) | - |
+//! | `identifiers` | [`Slug`](identifiers::Slug) | - |
 //! | `serde` | Serialize/Deserialize for all types | - |
 //! | `full` | All of the above | - |
 //!
@@ -109,5 +113,17 @@ pub mod phone;
 
 #[cfg(feature = "financial")]
 pub mod financial;
+
+#[cfg(feature = "network")]
+pub mod network;
+
+#[cfg(feature = "geo")]
+pub mod geo;
+
+#[cfg(feature = "numeric")]
+pub mod numeric;
+
+#[cfg(feature = "identifiers")]
+pub mod identifiers;
 
 pub use error::{DomainError, DomainErrorKind};
