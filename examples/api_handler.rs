@@ -1,4 +1,4 @@
-//! API handler example demonstrating Effect composition with platypus types.
+//! API handler example demonstrating Effect composition with stilltypes.
 //!
 //! This example shows how to bridge from Validation to Effect for async I/O
 //! operations after validation, following the "pure core, effects at boundary"
@@ -6,7 +6,7 @@
 //!
 //! Run with: cargo run --example api_handler --features full
 
-use platypus::prelude::*;
+use stilltypes::prelude::*;
 use stillwater::effect::prelude::*;
 use stillwater::validation::{ValidateAll, Validation};
 
@@ -92,7 +92,7 @@ fn register_user(
 
 #[tokio::main]
 async fn main() {
-    println!("Platypus API Handler Example");
+    println!("Stilltypes API Handler Example");
     println!("=============================\n");
 
     let env = AppEnv { db_connected: true };

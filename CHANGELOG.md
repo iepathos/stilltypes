@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.0] - 2024-12-22
 
-Initial release of Platypus - domain-specific refined types for the Stillwater ecosystem.
+Initial release of Stilltypes - domain-specific refined types for the Stillwater ecosystem.
 
 ### Added
 
@@ -70,4 +70,4 @@ Initial release of Platypus - domain-specific refined types for the Stillwater e
 | `serde` | Serialization support | |
 | `full` | All validators | |
 
-[0.1.0]: https://github.com/iepathos/platypus/releases/tag/v0.1.0
+[0.1.0]: https://github.com/iepathos/stilltypes/releases/tag/v0.1.0

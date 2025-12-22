@@ -13,7 +13,7 @@
 //! # Example
 //!
 //! ```
-//! use platypus::financial::{Iban, CreditCardNumber};
+//! use stilltypes::financial::{Iban, CreditCardNumber};
 //!
 //! // Valid IBAN (German example)
 //! let iban = Iban::new("DE89370400440532013000".to_string());
@@ -59,7 +59,7 @@ fn mask_iban(iban: &str) -> String {
 ///
 /// # Example
 /// ```
-/// use platypus::financial::Iban;
+/// use stilltypes::financial::Iban;
 ///
 /// let iban = Iban::new("DE89370400440532013000".to_string());
 /// assert!(iban.is_ok());
@@ -109,7 +109,7 @@ impl Predicate<String> for ValidIban {
 ///
 /// # Example
 /// ```
-/// use platypus::financial::CreditCardNumber;
+/// use stilltypes::financial::CreditCardNumber;
 ///
 /// // Visa test card
 /// let card = CreditCardNumber::new("4111111111111111".to_string());
@@ -168,7 +168,7 @@ impl IbanExt for Iban {
     ///
     /// # Example
     /// ```
-    /// use platypus::financial::{Iban, IbanExt};
+    /// use stilltypes::financial::{Iban, IbanExt};
     ///
     /// let iban = Iban::new("DE89370400440532013000".to_string()).unwrap();
     /// assert_eq!(iban.country_code(), "DE");
@@ -181,7 +181,7 @@ impl IbanExt for Iban {
     ///
     /// # Example
     /// ```
-    /// use platypus::financial::{Iban, IbanExt};
+    /// use stilltypes::financial::{Iban, IbanExt};
     ///
     /// let iban = Iban::new("DE89370400440532013000".to_string()).unwrap();
     /// assert_eq!(iban.masked(), "DE89****3000");
@@ -204,7 +204,7 @@ impl CreditCardExt for CreditCardNumber {
     ///
     /// # Example
     /// ```
-    /// use platypus::financial::{CreditCardNumber, CreditCardExt};
+    /// use stilltypes::financial::{CreditCardNumber, CreditCardExt};
     ///
     /// let card = CreditCardNumber::new("4111111111111111".to_string()).unwrap();
     /// assert_eq!(card.masked(), "****1111");
@@ -217,7 +217,7 @@ impl CreditCardExt for CreditCardNumber {
     ///
     /// # Example
     /// ```
-    /// use platypus::financial::{CreditCardNumber, CreditCardExt};
+    /// use stilltypes::financial::{CreditCardNumber, CreditCardExt};
     ///
     /// let card = CreditCardNumber::new("4111111111111111".to_string()).unwrap();
     /// assert_eq!(card.last_four(), "1111");

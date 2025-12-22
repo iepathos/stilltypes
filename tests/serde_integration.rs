@@ -1,11 +1,11 @@
-//! Serde integration tests for platypus.
+//! Serde integration tests for stilltypes.
 //!
 //! Tests validation-on-deserialize behavior using stillwater's built-in
 //! serde implementation for `Refined<T, P>`.
 
 #[cfg(all(feature = "serde", feature = "email"))]
 mod email_serde {
-    use platypus::email::Email;
+    use stilltypes::email::Email;
 
     #[test]
     fn email_deserializes() {
@@ -39,7 +39,7 @@ mod email_serde {
 
 #[cfg(all(feature = "serde", feature = "url"))]
 mod url_serde {
-    use platypus::url::{HttpUrl, SecureUrl, Url};
+    use stilltypes::url::{HttpUrl, SecureUrl, Url};
 
     #[test]
     fn url_deserializes() {
@@ -88,7 +88,7 @@ mod url_serde {
 
 #[cfg(all(feature = "serde", feature = "uuid"))]
 mod uuid_serde {
-    use platypus::uuid::{Uuid, UuidV4, UuidV7};
+    use stilltypes::uuid::{Uuid, UuidV4, UuidV7};
 
     #[test]
     fn uuid_deserializes() {
@@ -130,7 +130,7 @@ mod uuid_serde {
 
 #[cfg(all(feature = "serde", feature = "phone"))]
 mod phone_serde {
-    use platypus::phone::{PhoneNumber, PhoneNumberExt};
+    use stilltypes::phone::{PhoneNumber, PhoneNumberExt};
 
     #[test]
     fn phone_deserializes() {
@@ -164,7 +164,7 @@ mod phone_serde {
 
 #[cfg(all(feature = "serde", feature = "financial"))]
 mod financial_serde {
-    use platypus::financial::{CreditCardExt, CreditCardNumber, Iban, IbanExt};
+    use stilltypes::financial::{CreditCardExt, CreditCardNumber, Iban, IbanExt};
 
     #[test]
     fn iban_deserializes() {
@@ -227,7 +227,7 @@ mod financial_serde {
 
 #[cfg(all(feature = "serde", feature = "email", feature = "url"))]
 mod composite_serde {
-    use platypus::prelude::*;
+    use stilltypes::prelude::*;
     use serde::{Deserialize, Serialize};
 
     #[derive(Debug, Serialize, Deserialize)]
@@ -290,7 +290,7 @@ mod composite_serde {
 
 #[cfg(all(feature = "serde", feature = "full"))]
 mod full_integration_serde {
-    use platypus::prelude::*;
+    use stilltypes::prelude::*;
     use serde::{Deserialize, Serialize};
 
     #[derive(Debug, Serialize, Deserialize)]

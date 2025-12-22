@@ -11,7 +11,7 @@
 //! # Example
 //!
 //! ```
-//! use platypus::error::{DomainError, DomainErrorKind};
+//! use stilltypes::error::{DomainError, DomainErrorKind};
 //!
 //! let error = DomainError {
 //!     format_name: "email address",
@@ -37,7 +37,7 @@ use std::fmt;
 /// # Example
 ///
 /// ```
-/// use platypus::error::{DomainError, DomainErrorKind};
+/// use stilltypes::error::{DomainError, DomainErrorKind};
 ///
 /// let error = DomainError {
 ///     format_name: "email address",

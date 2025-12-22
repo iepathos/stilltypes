@@ -8,7 +8,7 @@
 //! # Example
 //!
 //! ```
-//! use platypus::uuid::{Uuid, UuidV4, UuidV7, ToUuid};
+//! use stilltypes::uuid::{Uuid, UuidV4, UuidV7, ToUuid};
 //!
 //! // Any valid UUID (any version)
 //! let uuid = Uuid::new("550e8400-e29b-41d4-a716-446655440000".to_string());
@@ -39,7 +39,7 @@ use uuid::Uuid as UuidImpl;
 /// # Example
 ///
 /// ```
-/// use platypus::uuid::Uuid;
+/// use stilltypes::uuid::Uuid;
 ///
 /// let id = Uuid::new("550e8400-e29b-41d4-a716-446655440000".to_string());
 /// assert!(id.is_ok());
@@ -75,7 +75,7 @@ impl Predicate<String> for ValidUuid {
 /// # Example
 ///
 /// ```
-/// use platypus::uuid::UuidV4;
+/// use stilltypes::uuid::UuidV4;
 ///
 /// // v4 UUID passes
 /// let v4 = UuidV4::new("550e8400-e29b-41d4-a716-446655440000".to_string());
@@ -154,7 +154,7 @@ const fn uuid_version_example<const V: usize>() -> &'static str {
 /// # Example
 ///
 /// ```
-/// use platypus::uuid::Uuid;
+/// use stilltypes::uuid::Uuid;
 ///
 /// let validated = Uuid::new("550e8400-e29b-41d4-a716-446655440000".to_string()).unwrap();
 /// assert_eq!(validated.get(), "550e8400-e29b-41d4-a716-446655440000");
@@ -168,7 +168,7 @@ pub type Uuid = Refined<String, ValidUuid>;
 /// # Example
 ///
 /// ```
-/// use platypus::uuid::UuidV4;
+/// use stilltypes::uuid::UuidV4;
 ///
 /// let v4 = UuidV4::new("550e8400-e29b-41d4-a716-446655440000".to_string()).unwrap();
 /// ```
@@ -181,7 +181,7 @@ pub type UuidV4 = Refined<String, UuidVersion<4>>;
 /// # Example
 ///
 /// ```
-/// use platypus::uuid::UuidV7;
+/// use stilltypes::uuid::UuidV7;
 ///
 /// let v7 = UuidV7::new("018f6b8e-e4a0-7000-8000-000000000000".to_string()).unwrap();
 /// ```
@@ -194,7 +194,7 @@ pub type UuidV7 = Refined<String, UuidVersion<7>>;
 /// # Example
 ///
 /// ```
-/// use platypus::uuid::{Uuid, ToUuid};
+/// use stilltypes::uuid::{Uuid, ToUuid};
 ///
 /// let validated = Uuid::new("550e8400-e29b-41d4-a716-446655440000".to_string()).unwrap();
 /// let uuid_impl = validated.to_uuid();

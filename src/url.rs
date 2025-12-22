@@ -10,7 +10,7 @@
 //! # Example
 //!
 //! ```
-//! use platypus::url::{Url, HttpUrl, SecureUrl};
+//! use stilltypes::url::{Url, HttpUrl, SecureUrl};
 //!
 //! // Any valid URL
 //! let url = Url::new("https://example.com".to_string());
@@ -39,7 +39,7 @@ use url::Url as UrlParser;
 /// # Example
 ///
 /// ```
-/// use platypus::url::Url;
+/// use stilltypes::url::Url;
 ///
 /// let url = Url::new("https://example.com/path".to_string());
 /// assert!(url.is_ok());
@@ -79,7 +79,7 @@ impl Predicate<String> for ValidUrl {
 /// # Example
 ///
 /// ```
-/// use platypus::url::HttpUrl;
+/// use stilltypes::url::HttpUrl;
 ///
 /// let http = HttpUrl::new("http://example.com".to_string());
 /// assert!(http.is_ok());
@@ -130,7 +130,7 @@ impl Predicate<String> for HttpScheme {
 /// # Example
 ///
 /// ```
-/// use platypus::url::SecureUrl;
+/// use stilltypes::url::SecureUrl;
 ///
 /// let https = SecureUrl::new("https://example.com".to_string());
 /// assert!(https.is_ok());
@@ -182,7 +182,7 @@ impl Predicate<String> for HttpsOnly {
 /// # Example
 ///
 /// ```
-/// use platypus::url::Url;
+/// use stilltypes::url::Url;
 ///
 /// let url = Url::new("https://example.com/path?query=value".to_string()).unwrap();
 /// assert_eq!(url.get(), "https://example.com/path?query=value");
@@ -197,7 +197,7 @@ pub type Url = Refined<String, ValidUrl>;
 /// # Example
 ///
 /// ```
-/// use platypus::url::HttpUrl;
+/// use stilltypes::url::HttpUrl;
 ///
 /// let http = HttpUrl::new("http://example.com".to_string()).unwrap();
 /// let https = HttpUrl::new("https://example.com".to_string()).unwrap();
@@ -216,7 +216,7 @@ pub type HttpUrl = Refined<String, And<ValidUrl, HttpScheme>>;
 /// # Example
 ///
 /// ```
-/// use platypus::url::SecureUrl;
+/// use stilltypes::url::SecureUrl;
 ///
 /// let secure = SecureUrl::new("https://api.example.com".to_string()).unwrap();
 ///

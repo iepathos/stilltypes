@@ -1,12 +1,12 @@
-//! Convenient imports for common platypus usage.
+//! Convenient imports for common stilltypes usage.
 //!
-//! This module re-exports the most commonly used types from platypus,
+//! This module re-exports the most commonly used types from stilltypes,
 //! allowing you to get started quickly with a single import.
 //!
 //! # Example
 //!
 //! ```
-//! use platypus::prelude::*;
+//! use stilltypes::prelude::*;
 //!
 //! // Now you have access to all enabled domain types
 //! # #[cfg(feature = "email")]
@@ -23,7 +23,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! platypus = { version = "0.1", features = ["email", "url", "phone"] }
+//! stilltypes = { version = "0.1", features = ["email", "url", "phone"] }
 //! ```
 
 pub use crate::error::{DomainError, DomainErrorKind};

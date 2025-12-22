@@ -1,11 +1,11 @@
-//! Form validation example demonstrating error accumulation with platypus types.
+//! Form validation example demonstrating error accumulation with stilltypes.
 //!
 //! This example shows how to use stillwater's `Validation` to collect all
 //! validation errors at once, rather than failing on the first error.
 //!
 //! Run with: cargo run --example form_validation --features full
 
-use platypus::prelude::*;
+use stilltypes::prelude::*;
 use stillwater::validation::Validation;
 
 /// Raw form input before validation.
@@ -63,7 +63,7 @@ fn validate(form: RegistrationForm) -> Validation<ValidRegistration, Vec<DomainE
 }
 
 fn main() {
-    println!("Platypus Form Validation Example");
+    println!("Stilltypes Form Validation Example");
     println!("=================================\n");
 
     // Example 1: Valid form - all fields pass validation

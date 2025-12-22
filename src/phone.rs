@@ -6,7 +6,7 @@
 //! # Example
 //!
 //! ```
-//! use platypus::phone::PhoneNumber;
+//! use stilltypes::phone::PhoneNumber;
 //!
 //! // Valid phone numbers (E.164 format)
 //! let us = PhoneNumber::new("+14155551234".to_string());
@@ -33,7 +33,7 @@ use stillwater::refined::{Predicate, Refined};
 /// # Example
 ///
 /// ```
-/// use platypus::phone::PhoneNumber;
+/// use stilltypes::phone::PhoneNumber;
 ///
 /// // US number
 /// let us = PhoneNumber::new("+14155551234".to_string());
@@ -94,7 +94,7 @@ impl Predicate<String> for ValidPhoneNumber {
 /// # Example
 ///
 /// ```
-/// use platypus::phone::{PhoneNumber, PhoneNumberExt};
+/// use stilltypes::phone::{PhoneNumber, PhoneNumberExt};
 ///
 /// let phone = PhoneNumber::new("+1 (415) 555-1234".to_string()).unwrap();
 ///
@@ -110,7 +110,7 @@ pub type PhoneNumber = Refined<String, ValidPhoneNumber>;
 /// # Example
 ///
 /// ```
-/// use platypus::phone::{PhoneNumber, PhoneNumberExt};
+/// use stilltypes::phone::{PhoneNumber, PhoneNumberExt};
 ///
 /// let phone = PhoneNumber::new("+1 (415) 555-1234".to_string()).unwrap();
 /// assert_eq!(phone.to_e164(), "+14155551234");
@@ -125,7 +125,7 @@ pub trait PhoneNumberExt {
     /// # Example
     ///
     /// ```
-    /// use platypus::phone::{PhoneNumber, PhoneNumberExt};
+    /// use stilltypes::phone::{PhoneNumber, PhoneNumberExt};
     ///
     /// let phone = PhoneNumber::new("+1 (415) 555-1234".to_string()).unwrap();
     /// assert_eq!(phone.to_e164(), "+14155551234");
@@ -142,7 +142,7 @@ pub trait PhoneNumberExt {
     /// # Example
     ///
     /// ```
-    /// use platypus::phone::{PhoneNumber, PhoneNumberExt};
+    /// use stilltypes::phone::{PhoneNumber, PhoneNumberExt};
     ///
     /// let us = PhoneNumber::new("+14155551234".to_string()).unwrap();
     /// assert_eq!(us.country_code(), 1);

@@ -1,9 +1,9 @@
-//! Integration tests for platypus.
+//! Integration tests for stilltypes.
 //!
-//! This file tests the public API of platypus to ensure all modules
+//! This file tests the public API of stilltypes to ensure all modules
 //! compile and export correctly with various feature flag combinations.
 
-use platypus::prelude::*;
+use stilltypes::prelude::*;
 
 #[test]
 fn test_error_types_accessible() {

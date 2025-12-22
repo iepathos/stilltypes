@@ -5,7 +5,7 @@
 //! # Example
 //!
 //! ```
-//! use platypus::email::Email;
+//! use stilltypes::email::Email;
 //!
 //! // Valid email addresses
 //! let email = Email::new("user@example.com".to_string());
@@ -29,7 +29,7 @@ use stillwater::refined::{Predicate, Refined};
 /// # Example
 ///
 /// ```
-/// use platypus::email::Email;
+/// use stilltypes::email::Email;
 ///
 /// let email = Email::new("user@example.com".to_string());
 /// assert!(email.is_ok());
@@ -80,7 +80,7 @@ impl Predicate<String> for ValidEmail {
 /// # Example
 ///
 /// ```
-/// use platypus::email::Email;
+/// use stilltypes::email::Email;
 ///
 /// // Create from valid email
 /// let email = Email::new("hello@example.com".to_string()).unwrap();

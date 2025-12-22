@@ -1,4 +1,4 @@
-# Platypus - Justfile
+# Stilltypes - Justfile
 # Quick development commands for Rust projects
 
 # Default recipe - show available commands
@@ -239,7 +239,7 @@ ci:
 
 # Full CI build pipeline
 ci-build:
-    @echo "Building platypus..."
+    @echo "Building stilltypes..."
     @echo "Checking code formatting..."
     cargo fmt --all -- --check
     @echo "Running clippy..."

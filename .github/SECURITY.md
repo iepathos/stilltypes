@@ -41,7 +41,7 @@ Please report (suspected) security vulnerabilities to **[iepathos@gmail.com](mai
 
 ## Security Features
 
-### Platypus Security
+### Stilltypes Security
 - All refined types validate input at construction time
 - Invalid data cannot exist in refined type wrappers
 - Type system enforces validation guarantees at compile time
@@ -60,7 +60,7 @@ Please report (suspected) security vulnerabilities to **[iepathos@gmail.com](mai
 ## Security Contacts
 
 - **Primary**: Glen Baker (iepathos@gmail.com)
-- **Repository**: https://github.com/iepathos/platypus
+- **Repository**: https://github.com/iepathos/stilltypes
 - **Security Advisory**: GitHub Security Advisories
 
 ## Hall of Fame

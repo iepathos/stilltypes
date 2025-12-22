@@ -1,8 +1,8 @@
-//! # Platypus
+//! # Stilltypes
 //!
 //! Domain-specific refined types for the Stillwater ecosystem.
 //!
-//! Platypus provides production-ready predicates and type aliases for common
+//! Stilltypes provides production-ready predicates and type aliases for common
 //! domain types like email addresses, URLs, phone numbers, and more. All types
 //! integrate seamlessly with [stillwater](https://docs.rs/stillwater)'s
 //! `Validation` for error accumulation and `Effect` for composable I/O.
@@ -10,7 +10,7 @@
 //! ## Quick Start
 //!
 //! ```
-//! use platypus::prelude::*;
+//! use stilltypes::prelude::*;
 //!
 //! // Types validate on construction
 //! # #[cfg(feature = "email")]
@@ -32,7 +32,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! platypus = { version = "0.1", default-features = false, features = ["email", "url"] }
+//! stilltypes = { version = "0.1", default-features = false, features = ["email", "url"] }
 //! ```
 //!
 //! | Feature | Types | Dependencies |
@@ -50,7 +50,7 @@
 //! Collect all validation errors at once using stillwater's `Validation`:
 //!
 //! ```ignore
-//! use platypus::prelude::*;
+//! use stilltypes::prelude::*;
 //! use stillwater::validation::Validation;
 //!
 //! fn validate_form(email: String, phone: String) -> Validation<ValidForm, Vec<DomainError>> {
@@ -67,7 +67,7 @@
 //! With the `serde` feature, types validate during deserialization:
 //!
 //! ```ignore
-//! use platypus::prelude::*;
+//! use stilltypes::prelude::*;
 //! use serde::Deserialize;
 //!
 //! #[derive(Deserialize)]
@@ -82,7 +82,7 @@
 //!
 //! ## Philosophy
 //!
-//! Platypus follows the [Stillwater philosophy](https://github.com/iepathos/stillwater):
+//! Stilltypes follows the [Stillwater philosophy](https://github.com/iepathos/stillwater):
 //!
 //! - **Parse, Don't Validate** - Domain types encode invariants in the type
 //! - **Errors Should Tell Stories** - Rich context for user-facing messages

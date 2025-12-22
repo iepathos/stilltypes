@@ -401,23 +401,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 
 [[package]]
-name = "platypus"
-version = "0.1.0"
-dependencies = [
- "creditcard",
- "email_address",
- "iban_validate",
- "phonenumber",
- "regex",
- "serde",
- "serde_json",
- "stillwater",
- "tokio",
- "url",
- "uuid",
-]
-
-[[package]]
 name = "potential_utf"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -572,6 +555,23 @@ name = "stable_deref_trait"
 version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6ce2be8dc25455e1f91df71bfa12ad37d7af1092ae736f3a6cd0e37bc7810596"
+
+[[package]]
+name = "stilltypes"
+version = "0.1.0"
+dependencies = [
+ "creditcard",
+ "email_address",
+ "iban_validate",
+ "phonenumber",
+ "regex",
+ "serde",
+ "serde_json",
+ "stillwater",
+ "tokio",
+ "url",
+ "uuid",
+]
 
 [[package]]
 name = "stillwater"
