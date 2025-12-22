@@ -43,6 +43,7 @@
 //! | `phone` | [`PhoneNumber`](phone::PhoneNumber) | `phonenumber` |
 //! | `financial` | [`Iban`](financial::Iban), [`CreditCardNumber`](financial::CreditCardNumber) | `iban_validate`, `creditcard` |
 //! | `network` | [`Ipv4Addr`](network::Ipv4Addr), [`Ipv6Addr`](network::Ipv6Addr), [`DomainName`](network::DomainName), [`Port`](network::Port) | - |
+//! | `geo` | [`Latitude`](geo::Latitude), [`Longitude`](geo::Longitude) | - |
 //! | `serde` | Serialize/Deserialize for all types | - |
 //! | `full` | All of the above | - |
 //!
@@ -113,5 +114,8 @@ pub mod financial;
 
 #[cfg(feature = "network")]
 pub mod network;
+
+#[cfg(feature = "geo")]
+pub mod geo;
 
 pub use error::{DomainError, DomainErrorKind};

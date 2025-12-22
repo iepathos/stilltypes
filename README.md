@@ -41,6 +41,7 @@ stilltypes = { version = "0.1", default-features = false, features = ["email", "
 | `phone` | `PhoneNumber` | `phonenumber` |
 | `financial` | `Iban`, `CreditCardNumber` | `iban_validate`, `creditcard` |
 | `network` | `Ipv4Addr`, `Ipv6Addr`, `DomainName`, `Port` | - |
+| `geo` | `Latitude`, `Longitude` | - |
 | `serde` | Serialize/Deserialize for all types | - |
 | `full` | All of the above | - |
 
@@ -195,6 +196,24 @@ let domain = DomainName::new("api.example.com".to_string())?;
 assert_eq!(domain.tld(), Some("com"));
 ```
 
+### Geographic Coordinates
+
+```rust,ignore
+use stilltypes::geo::{Latitude, Longitude, LatitudeExt, LongitudeExt};
+
+// Latitude validates range -90 to 90 degrees
+let lat = Latitude::new(37.7749)?;
+assert!(lat.is_north());
+
+// Longitude validates range -180 to 180 degrees
+let lon = Longitude::new(-122.4194)?;
+assert!(lon.is_west());
+
+// Convert to degrees, minutes, seconds
+let (deg, min, sec, hemi) = lat.to_dms();
+// 37° 46' 29.64" N
+```
+
 ## When to Use Stilltypes
 
 **Use Stilltypes when:**
@@ -224,6 +243,7 @@ See the `examples/` directory for complete working examples:
 - `form_validation.rs` - Error accumulation with `Validation::all()`
 - `api_handler.rs` - Effect composition with `from_validation()`
 - `network_validation.rs` - Server config validation with IP/port/domain
+- `geo_validation.rs` - Geographic coordinate validation with DMS conversion
 
 Run with:
 
@@ -231,6 +251,7 @@ Run with:
 cargo run --example form_validation --features full
 cargo run --example api_handler --features full
 cargo run --example network_validation --features full
+cargo run --example geo_validation --features full
 ```
 
 ## The Stillwater Ecosystem

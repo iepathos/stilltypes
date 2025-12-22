@@ -50,3 +50,9 @@ pub use crate::network::{
     DomainName, DomainNameExt, Ipv4Addr, Ipv4Ext, Ipv6Addr, Ipv6Ext, Port, PortExt,
     ValidDomainName, ValidIpv4, ValidIpv6, ValidPort,
 };
+
+#[cfg(feature = "geo")]
+pub use crate::geo::{
+    Latitude, LatitudeExt, Longitude, LongitudeExt, ValidLatitude, ValidLongitude,
+    latitude_from_dms, longitude_from_dms,
+};
