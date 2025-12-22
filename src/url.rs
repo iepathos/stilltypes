@@ -350,6 +350,28 @@ mod tests {
         assert_eq!(HttpsOnly::description(), "HTTPS scheme only");
     }
 
+    // Test standalone predicates with malformed URLs
+    // (normally unreachable when composed with ValidUrl via And)
+    #[test]
+    fn https_only_standalone_rejects_malformed() {
+        let result = HttpsOnly::check(&"not a url".to_string());
+        assert!(result.is_err());
+        let err = result.unwrap_err();
+        assert_eq!(err.format_name, "HTTPS URL");
+        assert!(matches!(
+            err.reason,
+            DomainErrorKind::InvalidFormat { .. }
+        ));
+    }
+
+    #[test]
+    fn http_scheme_standalone_rejects_malformed() {
+        let result = HttpScheme::check(&"invalid".to_string());
+        assert!(result.is_err());
+        let err = result.unwrap_err();
+        assert_eq!(err.format_name, "HTTP URL");
+    }
+
     // Composition tests
     #[test]
     fn and_combinator_validates_both_predicates() {

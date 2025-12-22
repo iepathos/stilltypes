@@ -123,23 +123,26 @@ impl<const V: usize> Predicate<String> for UuidVersion<V> {
 }
 
 /// Returns format name for UUID version.
+///
+/// # Panics
+/// Panics if V is not 4 or 7. Only these versions are publicly exposed.
 const fn uuid_version_name<const V: usize>() -> &'static str {
     match V {
-        1 => "UUID v1",
         4 => "UUID v4",
-        5 => "UUID v5",
-        6 => "UUID v6",
         7 => "UUID v7",
-        _ => "UUID",
+        _ => unreachable!(),
     }
 }
 
 /// Returns example for UUID version.
+///
+/// # Panics
+/// Panics if V is not 4 or 7. Only these versions are publicly exposed.
 const fn uuid_version_example<const V: usize>() -> &'static str {
     match V {
         4 => "550e8400-e29b-41d4-a716-446655440000",
         7 => "018f6b8e-e4a0-7000-8000-000000000000",
-        _ => "xxxxxxxx-xxxx-Vxxx-xxxx-xxxxxxxxxxxx",
+        _ => unreachable!(),
     }
 }
 
@@ -344,5 +347,29 @@ mod tests {
             UuidVersion::<4>::description(),
             "UUID with specific version"
         );
+    }
+
+    // Test malformed UUID passed to version-specific type
+    #[test]
+    fn uuid_v4_rejects_malformed() {
+        let result = UuidV4::new("not-a-uuid".to_string());
+        assert!(result.is_err());
+        let err = result.unwrap_err();
+        assert_eq!(err.format_name, "UUID");
+        assert!(matches!(
+            err.reason,
+            DomainErrorKind::InvalidFormat { .. }
+        ));
+    }
+
+    #[test]
+    fn uuid_v7_rejects_malformed() {
+        let result = UuidV7::new("invalid".to_string());
+        assert!(result.is_err());
+        let err = result.unwrap_err();
+        assert!(matches!(
+            err.reason,
+            DomainErrorKind::InvalidFormat { .. }
+        ));
     }
 }

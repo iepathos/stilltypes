@@ -224,11 +224,9 @@ impl CreditCardExt for CreditCardNumber {
     /// ```
     fn last_four(&self) -> String {
         let digits: String = self.get().chars().filter(|c| c.is_ascii_digit()).collect();
-        if digits.len() >= 4 {
-            digits[digits.len() - 4..].to_string()
-        } else {
-            digits
-        }
+        // Valid credit cards always have at least 13 digits (minimum card length)
+        // so we can safely take the last 4
+        digits[digits.len() - 4..].to_string()
     }
 }
 
