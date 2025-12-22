@@ -37,15 +37,15 @@
 //!
 //! | Feature | Types | Dependencies |
 //! |---------|-------|--------------|
-//! | `email` (default) | [`Email`](email::Email) | `email_address` |
-//! | `url` (default) | [`Url`](url::Url), [`HttpUrl`](url::HttpUrl), [`SecureUrl`](url::SecureUrl) | `url` |
-//! | `uuid` | [`Uuid`](uuid::Uuid), [`UuidV4`](uuid::UuidV4), [`UuidV7`](uuid::UuidV7) | `uuid` |
-//! | `phone` | [`PhoneNumber`](phone::PhoneNumber) | `phonenumber` |
-//! | `financial` | [`Iban`](financial::Iban), [`CreditCardNumber`](financial::CreditCardNumber) | `iban_validate`, `creditcard` |
-//! | `network` | [`Ipv4Addr`](network::Ipv4Addr), [`Ipv6Addr`](network::Ipv6Addr), [`DomainName`](network::DomainName), [`Port`](network::Port) | - |
-//! | `geo` | [`Latitude`](geo::Latitude), [`Longitude`](geo::Longitude) | - |
-//! | `numeric` | [`Percentage`](numeric::Percentage), [`UnitInterval`](numeric::UnitInterval) | - |
-//! | `identifiers` | [`Slug`](identifiers::Slug) | - |
+//! | `email` (default) | [`Email`](crate::email::Email) | `email_address` |
+//! | `url` (default) | [`Url`](crate::url::Url), [`HttpUrl`](crate::url::HttpUrl), [`SecureUrl`](crate::url::SecureUrl) | `url` |
+//! | `uuid` | [`Uuid`](crate::uuid::Uuid), [`UuidV4`](crate::uuid::UuidV4), [`UuidV7`](crate::uuid::UuidV7) | `uuid` |
+//! | `phone` | [`PhoneNumber`](crate::phone::PhoneNumber) | `phonenumber` |
+//! | `financial` | [`Iban`](crate::financial::Iban), [`CreditCardNumber`](crate::financial::CreditCardNumber) | `iban_validate`, `creditcard` |
+//! | `network` | [`Ipv4Addr`](crate::network::Ipv4Addr), [`Ipv6Addr`](crate::network::Ipv6Addr), [`DomainName`](crate::network::DomainName), [`Port`](crate::network::Port) | - |
+//! | `geo` | [`Latitude`](crate::geo::Latitude), [`Longitude`](crate::geo::Longitude) | - |
+//! | `numeric` | [`Percentage`](crate::numeric::Percentage), [`UnitInterval`](crate::numeric::UnitInterval) | - |
+//! | `identifiers` | [`Slug`](crate::identifiers::Slug) | - |
 //! | `serde` | Serialize/Deserialize for all types | - |
 //! | `full` | All of the above | - |
 //!
