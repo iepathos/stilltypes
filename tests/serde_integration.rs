@@ -227,8 +227,8 @@ mod financial_serde {
 
 #[cfg(all(feature = "serde", feature = "email", feature = "url"))]
 mod composite_serde {
-    use stilltypes::prelude::*;
     use serde::{Deserialize, Serialize};
+    use stilltypes::prelude::*;
 
     #[derive(Debug, Serialize, Deserialize)]
     struct User {
@@ -290,8 +290,8 @@ mod composite_serde {
 
 #[cfg(all(feature = "serde", feature = "full"))]
 mod full_integration_serde {
-    use stilltypes::prelude::*;
     use serde::{Deserialize, Serialize};
+    use stilltypes::prelude::*;
 
     #[derive(Debug, Serialize, Deserialize)]
     struct RegistrationForm {

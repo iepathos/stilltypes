@@ -356,10 +356,7 @@ mod tests {
         assert!(result.is_err());
         let err = result.unwrap_err();
         assert_eq!(err.format_name, "UUID");
-        assert!(matches!(
-            err.reason,
-            DomainErrorKind::InvalidFormat { .. }
-        ));
+        assert!(matches!(err.reason, DomainErrorKind::InvalidFormat { .. }));
     }
 
     #[test]
@@ -367,9 +364,6 @@ mod tests {
         let result = UuidV7::new("invalid".to_string());
         assert!(result.is_err());
         let err = result.unwrap_err();
-        assert!(matches!(
-            err.reason,
-            DomainErrorKind::InvalidFormat { .. }
-        ));
+        assert!(matches!(err.reason, DomainErrorKind::InvalidFormat { .. }));
     }
 }

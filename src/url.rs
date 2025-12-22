@@ -358,10 +358,7 @@ mod tests {
         assert!(result.is_err());
         let err = result.unwrap_err();
         assert_eq!(err.format_name, "HTTPS URL");
-        assert!(matches!(
-            err.reason,
-            DomainErrorKind::InvalidFormat { .. }
-        ));
+        assert!(matches!(err.reason, DomainErrorKind::InvalidFormat { .. }));
     }
 
     #[test]
