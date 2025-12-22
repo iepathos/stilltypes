@@ -12,7 +12,7 @@ categories = ["development-tools", "rust-patterns"]
 readme = "README.md"
 
 [dependencies]
-stillwater = { version = "1.0", path = "../stillwater" }
+stillwater = "1.0"
 
 # Optional - each domain has its own dependency
 regex = { version = "1", optional = true }

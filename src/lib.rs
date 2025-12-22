@@ -5,6 +5,7 @@
 //! Platypus provides production-ready predicates and type aliases for common
 //! domain types like email addresses, URLs, phone numbers, and more.
 
+#![doc = include_str!("../README.md")]
 #![warn(missing_docs)]
 #![deny(unsafe_code)]
 

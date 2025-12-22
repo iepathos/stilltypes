@@ -10,7 +10,7 @@ Platypus provides production-ready domain predicates and refined types that inte
 
 ## Quick Start
 
-```rust
+```rust,ignore
 use platypus::prelude::*;
 use stillwater::prelude::*;
 
@@ -46,7 +46,7 @@ async fn handle_registration(input: RawInput, env: &AppEnv) -> Result<User, AppE
 ## Available Domain Types
 
 ### Email (RFC 5321)
-```rust
+```rust,ignore
 use platypus::email::{Email, PracticalEmail};
 
 let email = Email::new("user@example.com".into())?;
@@ -54,7 +54,7 @@ let strict = PracticalEmail::new("user@company.co".into())?; // Requires TLD
 ```
 
 ### URL (RFC 3986)
-```rust
+```rust,ignore
 use platypus::url::{Url, HttpUrl, SecureUrl};
 
 let any_url = Url::new("ftp://files.example.com".into())?;
@@ -63,7 +63,7 @@ let secure = SecureUrl::new("https://secure.example.com".into())?;
 ```
 
 ### UUID
-```rust
+```rust,ignore
 use platypus::uuid::{Uuid, UuidV4, UuidV7};
 
 let any = Uuid::new("550e8400-e29b-41d4-a716-446655440000".into())?;
@@ -72,7 +72,7 @@ let v7 = UuidV7::new("01902c6f-3c9b-7abc-8def-0123456789ab".into())?;
 ```
 
 ### Phone Numbers (E.164)
-```rust
+```rust,ignore
 use platypus::phone::{PhoneNumber, UsPhoneNumber};
 
 let intl = PhoneNumber::new("+14155551234".into())?;
@@ -83,7 +83,7 @@ assert_eq!(intl.to_e164(), "+14155551234");
 ```
 
 ### Financial
-```rust
+```rust,ignore
 use platypus::financial::{Iban, CreditCardNumber};
 
 let iban = Iban::new("DE89370400440532013000".into())?;
@@ -112,7 +112,7 @@ platypus = { version = "0.1", features = ["email", "url"] }
 
 ## Error Messages That Help
 
-```rust
+```rust,ignore
 let result = Email::new("invalid".into());
 // Error: invalid email address
 //   value: "invalid"

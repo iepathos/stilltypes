@@ -574,6 +574,8 @@ checksum = "6ce2be8dc25455e1f91df71bfa12ad37d7af1092ae736f3a6cd0e37bc7810596"
 [[package]]
 name = "stillwater"
 version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ca73e9f9f8131665bb1188cd3652d492763c1d71bd971f3b3b46d2a8b4928a28"
 dependencies = [
  "futures",
  "serde",
