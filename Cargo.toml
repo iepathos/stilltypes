@@ -25,7 +25,7 @@ creditcard = { version = "0.1", optional = true }
 
 [features]
 default = ["email", "url"]
-full = ["email", "url", "uuid", "phone", "financial", "network", "geo"]
+full = ["email", "url", "uuid", "phone", "financial", "network", "geo", "numeric"]
 
 email = ["dep:email_address"]
 url = ["dep:url"]
@@ -34,6 +34,7 @@ phone = ["dep:phonenumber"]
 financial = ["dep:iban", "dep:creditcard"]
 network = []
 geo = []
+numeric = []
 
 serde = ["stillwater/serde", "uuid?/serde", "url?/serde"]
 
@@ -57,4 +58,8 @@ required-features = ["full"]
 
 [[example]]
 name = "geo_validation"
+required-features = ["full"]
+
+[[example]]
+name = "discount_validation"
 required-features = ["full"]

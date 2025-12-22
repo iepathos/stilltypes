@@ -56,3 +56,8 @@ pub use crate::geo::{
     Latitude, LatitudeExt, Longitude, LongitudeExt, ValidLatitude, ValidLongitude,
     latitude_from_dms, longitude_from_dms,
 };
+
+#[cfg(feature = "numeric")]
+pub use crate::numeric::{
+    Percentage, PercentageExt, UnitInterval, UnitIntervalExt, ValidPercentage, ValidUnitInterval,
+};

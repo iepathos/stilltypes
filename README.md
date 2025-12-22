@@ -42,6 +42,7 @@ stilltypes = { version = "0.1", default-features = false, features = ["email", "
 | `financial` | `Iban`, `CreditCardNumber` | `iban_validate`, `creditcard` |
 | `network` | `Ipv4Addr`, `Ipv6Addr`, `DomainName`, `Port` | - |
 | `geo` | `Latitude`, `Longitude` | - |
+| `numeric` | `Percentage`, `UnitInterval` | - |
 | `serde` | Serialize/Deserialize for all types | - |
 | `full` | All of the above | - |
 
@@ -214,6 +215,24 @@ let (deg, min, sec, hemi) = lat.to_dms();
 // 37° 46' 29.64" N
 ```
 
+### Bounded Numerics
+
+```rust,ignore
+use stilltypes::numeric::{Percentage, UnitInterval, PercentageExt, UnitIntervalExt};
+
+// Percentage validates range 0 to 100
+let discount = Percentage::new(25.0)?;
+let price = 100.0;
+let discounted = price - discount.of(price);  // 75.0
+
+// Convert between representations
+let probability = UnitInterval::new(0.75)?;
+let as_percent = probability.to_percentage();  // 75%
+
+// Create from decimal
+let half = Percentage::from_decimal(0.5)?;  // 50%
+```
+
 ## When to Use Stilltypes
 
 **Use Stilltypes when:**
@@ -244,6 +263,7 @@ See the `examples/` directory for complete working examples:
 - `api_handler.rs` - Effect composition with `from_validation()`
 - `network_validation.rs` - Server config validation with IP/port/domain
 - `geo_validation.rs` - Geographic coordinate validation with DMS conversion
+- `discount_validation.rs` - Percentage and pricing calculations with numeric types
 
 Run with:
 
@@ -252,6 +272,7 @@ cargo run --example form_validation --features full
 cargo run --example api_handler --features full
 cargo run --example network_validation --features full
 cargo run --example geo_validation --features full
+cargo run --example discount_validation --features full
 ```
 
 ## The Stillwater Ecosystem
