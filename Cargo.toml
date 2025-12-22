@@ -48,3 +48,11 @@ required-features = ["full"]
 [[example]]
 name = "api_handler"
 required-features = ["full"]
+
+[[example]]
+name = "uuid_validation"
+required-features = ["uuid"]
+
+[[example]]
+name = "financial_validation"
+required-features = ["financial"]

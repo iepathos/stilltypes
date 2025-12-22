@@ -153,6 +153,32 @@ fn main() {
 
     // URL validation (different schemes)
     println!("\nURL validation:");
+
+    println!("  Url (any valid URL):");
+    for input in [
+        "https://example.com",
+        "http://example.com",
+        "ftp://files.example.com",
+        "file:///path/to/file",
+    ] {
+        match stilltypes::url::Url::new(input.to_string()) {
+            Ok(url) => println!("    '{}' -> valid: {}", input, url.get()),
+            Err(e) => println!("    '{}' -> {}", input, e),
+        }
+    }
+
+    println!("  HttpUrl (HTTP or HTTPS only):");
+    for input in [
+        "https://example.com",
+        "http://example.com",
+        "ftp://files.example.com",
+    ] {
+        match HttpUrl::new(input.to_string()) {
+            Ok(url) => println!("    '{}' -> valid: {}", input, url.get()),
+            Err(_) => println!("    '{}' -> rejected (not HTTP/HTTPS)", input),
+        }
+    }
+
     println!("  SecureUrl (HTTPS only):");
     for input in ["https://example.com", "http://example.com"] {
         match SecureUrl::new(input.to_string()) {
@@ -160,4 +186,9 @@ fn main() {
             Err(_) => println!("    '{}' -> rejected (insecure)", input),
         }
     }
+
+    println!("\n=== URL Type Hierarchy ===");
+    println!("  Url       -> any valid RFC 3986 URL (ftp, file, http, etc.)");
+    println!("  HttpUrl   -> HTTP or HTTPS only (web URLs)");
+    println!("  SecureUrl -> HTTPS only (secure web URLs)");
 }
