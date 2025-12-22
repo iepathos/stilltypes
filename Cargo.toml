@@ -12,7 +12,7 @@ categories = ["development-tools", "rust-patterns"]
 readme = "README.md"
 
 [dependencies]
-stillwater = { version = "1.0", path = "../stillwater" }
+stillwater = "1.0"
 
 # Optional - each domain has its own dependency
 regex = { version = "1", optional = true }
@@ -20,7 +20,7 @@ url = { version = "2", optional = true }
 uuid = { version = "1", optional = true }
 phonenumber = { version = "0.3", optional = true }
 email_address = { version = "0.2", optional = true }
-iban_validate = { version = "5", optional = true }
+iban = { version = "5", optional = true, package = "iban_validate" }
 creditcard = { version = "0.1", optional = true }
 
 [features]
@@ -31,9 +31,20 @@ email = ["dep:email_address"]
 url = ["dep:url"]
 uuid = ["dep:uuid"]
 phone = ["dep:phonenumber"]
-financial = ["dep:iban_validate", "dep:creditcard"]
+financial = ["dep:iban", "dep:creditcard"]
 
 serde = ["stillwater/serde", "uuid?/serde", "url?/serde"]
 
 [dev-dependencies]
+serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+
+# Examples require the full feature set
+[[example]]
+name = "form_validation"
+required-features = ["full"]
+
+[[example]]
+name = "api_handler"
+required-features = ["full"]
