@@ -40,11 +40,13 @@ fn validate_request(
 
     (user_v, session_v, tx_v)
         .validate_all()
-        .map(|(user_id, session_id, transaction_id)| ValidResourceRequest {
-            user_id,
-            session_id,
-            transaction_id,
-        })
+        .map(
+            |(user_id, session_id, transaction_id)| ValidResourceRequest {
+                user_id,
+                session_id,
+                transaction_id,
+            },
+        )
 }
 
 /// Pure function - extracts version info from validated UUIDs.
