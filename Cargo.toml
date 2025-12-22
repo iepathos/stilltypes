@@ -1,11 +1,11 @@
 [package]
 name = "stilltypes"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 rust-version = "1.89"
 authors = ["Glen Baker <iepathos@gmail.com>"]
 license = "MIT"
-description = "Domain-specific refined types for the Stillwater ecosystem"
+description = "Domain-specific refined types for the Rust and Stillwater ecosystem"
 repository = "https://github.com/iepathos/stilltypes"
 keywords = ["validation", "types", "refinement", "domain", "stillwater"]
 categories = ["development-tools", "rust-patterns"]
