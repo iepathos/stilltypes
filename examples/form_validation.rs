@@ -1,65 +1,163 @@
-//! Form validation example demonstrating platypus domain types.
+//! Form validation example demonstrating error accumulation with platypus types.
 //!
-//! This example shows how domain types can be used to validate user input
-//! in a form-like scenario, accumulating all errors rather than failing
-//! on the first one.
+//! This example shows how to use stillwater's `Validation` to collect all
+//! validation errors at once, rather than failing on the first error.
 //!
-//! Run with: cargo run --example form_validation --all-features
+//! Run with: cargo run --example form_validation --features full
 
 use platypus::prelude::*;
+use stillwater::validation::Validation;
+
+/// Raw form input before validation.
+#[derive(Debug)]
+struct RegistrationForm {
+    email: String,
+    phone: String,
+    website: String,
+}
+
+/// Validated registration data - these types guarantee validity.
+#[derive(Debug)]
+struct ValidRegistration {
+    email: Email,
+    phone: PhoneNumber,
+    website: HttpUrl,
+}
+
+/// Converts an HttpUrl error to a DomainError.
+///
+/// HttpUrl uses `And<ValidUrl, HttpScheme>` which returns `AndError`.
+/// We extract the first available error for display.
+fn http_url_error_to_domain(
+    e: stillwater::refined::AndError<DomainError, DomainError>,
+) -> DomainError {
+    match e {
+        stillwater::refined::AndError::First(e) => e,
+        stillwater::refined::AndError::Second(e) => e,
+        stillwater::refined::AndError::Both(e, _) => e,
+    }
+}
+
+/// Validates a registration form, accumulating all errors.
+///
+/// Uses `Validation::all` to run all validations and collect failures,
+/// rather than short-circuiting on the first error.
+fn validate(form: RegistrationForm) -> Validation<ValidRegistration, Vec<DomainError>> {
+    let email_v: Validation<Email, Vec<DomainError>> =
+        Validation::from_result(Email::new(form.email).map_err(|e| vec![e]));
+    let phone_v: Validation<PhoneNumber, Vec<DomainError>> =
+        Validation::from_result(PhoneNumber::new(form.phone).map_err(|e| vec![e]));
+    let url_v: Validation<HttpUrl, Vec<DomainError>> = Validation::from_result(
+        HttpUrl::new(form.website).map_err(|e| vec![http_url_error_to_domain(e)]),
+    );
+
+    // Use .validate_all() directly from the trait
+    use stillwater::validation::ValidateAll;
+    (email_v, phone_v, url_v)
+        .validate_all()
+        .map(|(email, phone, website)| ValidRegistration {
+            email,
+            phone,
+            website,
+        })
+}
 
 fn main() {
     println!("Platypus Form Validation Example");
     println!("=================================\n");
 
-    // Demonstrate error creation and formatting with rich context
-    let errors = [
-        DomainError {
-            format_name: "email address",
-            value: "not-an-email".to_string(),
-            reason: DomainErrorKind::InvalidFormat {
-                expected: "local@domain",
-            },
-            example: "user@example.com",
-        },
-        DomainError {
-            format_name: "phone number",
-            value: "".to_string(),
-            reason: DomainErrorKind::Empty,
-            example: "+1-555-123-4567",
-        },
-        DomainError {
-            format_name: "password",
-            value: "abc".to_string(),
-            reason: DomainErrorKind::TooShort { min: 8, actual: 3 },
-            example: "MySecurePassword123",
-        },
-        DomainError {
-            format_name: "username",
-            value: "user@name".to_string(),
-            reason: DomainErrorKind::InvalidCharacter {
-                char: '@',
-                position: 4,
-            },
-            example: "valid_username",
-        },
-    ];
+    // Example 1: Valid form - all fields pass validation
+    println!("=== Valid Form ===");
+    let valid_form = RegistrationForm {
+        email: "user@example.com".into(),
+        phone: "+14155551234".into(),
+        website: "https://example.com".into(),
+    };
 
-    println!("Simulated validation errors:\n");
-    for (i, error) in errors.iter().enumerate() {
-        println!("Error {}:", i + 1);
-        println!("  {}\n", error);
+    match validate(valid_form) {
+        Validation::Success(reg) => {
+            println!("Registration successful!");
+            println!("  Email: {}", reg.email.get());
+            println!("  Phone: {}", reg.phone.to_e164());
+            println!("  Website: {}", reg.website.get());
+        }
+        Validation::Failure(errors) => {
+            println!("Validation failed!");
+            for err in errors {
+                println!("  - {}", err);
+            }
+        }
     }
 
-    println!("Error kinds available:");
-    println!("  - Empty: For required fields that are empty");
-    println!("  - TooLong: For values exceeding max length");
-    println!("  - TooShort: For values below min length");
-    println!("  - InvalidFormat: For malformed input");
-    println!("  - InvalidCharacter: For invalid characters at specific positions");
-    println!("  - InvalidChecksum: For checksum validation failures");
-    println!("  - InvalidComponent: For invalid parts of complex values");
+    // Example 2: Invalid form - all fields fail validation
+    println!("\n=== Invalid Form (all fields wrong) ===");
+    let invalid_form = RegistrationForm {
+        email: "not-an-email".into(),
+        phone: "also-not-valid".into(),
+        website: "not a url".into(),
+    };
 
-    println!("\n\nNote: Domain types (Email, Url, etc.) will be");
-    println!("implemented in subsequent specifications.");
+    match validate(invalid_form) {
+        Validation::Success(_) => println!("Unexpected success!"),
+        Validation::Failure(errors) => {
+            println!("Validation failed with {} errors:", errors.len());
+            for err in &errors {
+                println!("  - {}", err);
+            }
+        }
+    }
+
+    // Example 3: Partially invalid form - some fields fail
+    println!("\n=== Partially Invalid Form ===");
+    let partial_form = RegistrationForm {
+        email: "valid@example.com".into(),
+        phone: "bad-phone".into(),
+        website: "https://valid-url.com".into(),
+    };
+
+    match validate(partial_form) {
+        Validation::Success(_) => println!("Unexpected success!"),
+        Validation::Failure(errors) => {
+            println!("Validation failed with {} error(s):", errors.len());
+            for err in &errors {
+                println!("  - {}", err);
+            }
+        }
+    }
+
+    // Example 4: Demonstrate individual type validation
+    println!("\n=== Individual Type Validation ===");
+
+    // Email validation
+    println!("\nEmail validation:");
+    for input in ["user@example.com", "invalid", "user+tag@gmail.com"] {
+        match Email::new(input.to_string()) {
+            Ok(email) => println!("  '{}' -> valid: {}", input, email.get()),
+            Err(e) => println!("  '{}' -> {}", input, e),
+        }
+    }
+
+    // Phone validation with normalization
+    println!("\nPhone validation (with E.164 normalization):");
+    for input in ["+1 (415) 555-1234", "+442071234567", "invalid"] {
+        match PhoneNumber::new(input.to_string()) {
+            Ok(phone) => println!(
+                "  '{}' -> normalized: {}, country: {}",
+                input,
+                phone.to_e164(),
+                phone.country_code()
+            ),
+            Err(e) => println!("  '{}' -> {}", input, e),
+        }
+    }
+
+    // URL validation (different schemes)
+    println!("\nURL validation:");
+    println!("  SecureUrl (HTTPS only):");
+    for input in ["https://example.com", "http://example.com"] {
+        match SecureUrl::new(input.to_string()) {
+            Ok(url) => println!("    '{}' -> valid: {}", input, url.get()),
+            Err(_) => println!("    '{}' -> rejected (insecure)", input),
+        }
+    }
 }

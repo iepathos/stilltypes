@@ -38,3 +38,4 @@ serde = ["stillwater/serde", "uuid?/serde", "url?/serde"]
 [dev-dependencies]
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
