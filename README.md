@@ -4,7 +4,7 @@
 
 [![Crates.io](https://img.shields.io/crates/v/platypus.svg)](https://crates.io/crates/platypus)
 [![Documentation](https://docs.rs/platypus/badge.svg)](https://docs.rs/platypus)
-[![License](https://img.shields.io/crates/l/platypus.svg)](LICENSE-MIT)
+[![License](https://img.shields.io/crates/l/platypus.svg)](LICENSE)
 
 Platypus provides production-ready domain predicates and refined types that integrate seamlessly with [stillwater](https://github.com/iepathos/stillwater). Validate emails, URLs, phone numbers, and more with errors that accumulate and types that prove validity.
 
@@ -218,4 +218,4 @@ cargo run --example api_handler --features full
 
 ## License
 
-Licensed under either of Apache License, Version 2.0 or MIT license at your option.
+Licensed under the MIT license. See [LICENSE](LICENSE) for details.
