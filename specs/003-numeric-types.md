@@ -15,6 +15,15 @@ created: 2025-12-22
 **Status**: draft
 **Dependencies**: none
 
+## Philosophy Alignment
+
+This specification follows the [Stillwater Philosophy](../../../stillwater/PHILOSOPHY.md):
+
+- **Parse, Don't Validate** (§7): `Percentage` encodes the 0-100 invariant at the type level. Once constructed, it's guaranteed within bounds.
+- **Errors Should Tell Stories** (§3): Errors use domain terminology ("percentage must be 0-100") not generic "out of range".
+- **Composition Over Complexity** (§4): Simple types that compose with stillwater's validation.
+- **Types Guide, Don't Restrict** (§5): `Percentage` clearly communicates intent vs raw `f64`.
+
 ## Context
 
 Business applications frequently deal with numeric values that have semantic constraints beyond their raw type. Percentages, rates, probabilities, and other bounded numerics are common across domains like finance, statistics, e-commerce (discounts), and UI development (opacity, progress).
@@ -67,6 +76,10 @@ Add a `numeric` feature to stilltypes providing refined types for common bounded
 - [ ] Unit tests cover boundaries: 0.0, 50.0, 100.0 for percentage; 0.0, 0.5, 1.0 for unit interval
 - [ ] Unit tests cover invalid values: negative, >100, NaN, infinity
 - [ ] Conversion between Percentage and UnitInterval is accurate
+- [ ] `examples/discount_validation.rs` demonstrates error accumulation pattern
+- [ ] README.md feature table updated with numeric types
+- [ ] lib.rs feature table updated with numeric types
+- [ ] `full` feature includes `numeric`
 
 ## Technical Details
 
@@ -203,6 +216,68 @@ numeric = []  # No external dependencies
 "invalid probability: -0.1 must be between 0 and 1 (example: 0.75)"
 ```
 
+## Error Accumulation Example
+
+Following the "Fail Completely" pattern (PHILOSOPHY.md §2), numeric types integrate with `Validation::all()`:
+
+```rust
+use stilltypes::prelude::*;
+use stilltypes::numeric::{Percentage, UnitInterval};
+use stillwater::validation::{Validation, ValidateAll};
+
+/// Raw discount configuration input.
+struct DiscountInput {
+    base_discount: f64,      // Expected 0-100
+    member_bonus: f64,       // Expected 0-100
+    probability: f64,        // Expected 0-1
+}
+
+/// Validated discount configuration.
+struct ValidDiscount {
+    base_discount: Percentage,
+    member_bonus: Percentage,
+    probability: UnitInterval,
+}
+
+fn validate_discount(input: DiscountInput) -> Validation<ValidDiscount, Vec<DomainError>> {
+    let base_v = Validation::from_result(Percentage::new(input.base_discount).map_err(|e| vec![e]));
+    let bonus_v = Validation::from_result(Percentage::new(input.member_bonus).map_err(|e| vec![e]));
+    let prob_v = Validation::from_result(UnitInterval::new(input.probability).map_err(|e| vec![e]));
+
+    (base_v, bonus_v, prob_v)
+        .validate_all()
+        .map(|(base_discount, member_bonus, probability)| ValidDiscount {
+            base_discount,
+            member_bonus,
+            probability,
+        })
+}
+```
+
+## Pure Core Example
+
+Once validated, numeric types enable pure business logic:
+
+```rust
+/// Pure function - calculates final price with validated discounts.
+fn calculate_discounted_price(
+    price: f64,
+    base_discount: &Percentage,
+    member_bonus: &Percentage,
+) -> f64 {
+    // No validation needed - types guarantee 0-100 range
+    let total_discount = base_discount.get() + member_bonus.get();
+    let capped = total_discount.min(100.0);  // Business rule: max 100% off
+    price * (1.0 - capped / 100.0)
+}
+
+/// Pure function - applies probability-weighted scoring.
+fn weighted_score(base_score: f64, weight: &UnitInterval) -> f64 {
+    // Types guarantee weight is 0-1, safe to multiply
+    base_score * weight.get()
+}
+```
+
 ## Dependencies
 
 - **Prerequisites**: None
@@ -228,9 +303,45 @@ numeric = []  # No external dependencies
 
 ## Documentation Requirements
 
-- **Code Documentation**: Rustdoc with examples for construction and operations
-- **User Documentation**: Update lib.rs feature table
-- **Examples**: Discount calculation example, progress bar example
+### Code Documentation
+- Full rustdoc with examples for each type and trait
+- Module-level documentation explaining bounded numeric concepts
+
+### lib.rs Feature Table Update
+Add row to the feature table in `src/lib.rs`:
+```markdown
+//! | `numeric` | [`Percentage`](numeric::Percentage), [`UnitInterval`](numeric::UnitInterval) | - |
+```
+
+### README.md Updates
+Add to feature table:
+```markdown
+| `numeric` | `Percentage`, `UnitInterval` | - |
+```
+
+Add usage section:
+```markdown
+### Bounded Numerics
+
+\`\`\`rust,ignore
+use stilltypes::numeric::{Percentage, UnitInterval, PercentageExt};
+
+let discount = Percentage::new(25.0)?;
+let price = 100.0;
+let discounted = price - discount.of(price);  // 75.0
+
+// Convert between representations
+let probability = UnitInterval::new(0.75)?;
+let as_percent = Percentage::from_decimal(0.75)?;  // 75%
+\`\`\`
+```
+
+### Example File
+Create `examples/discount_validation.rs`:
+- Demonstrate discount/pricing calculations with validated percentages
+- Show error accumulation for multiple numeric validations
+- Include conversion between Percentage and UnitInterval
+- Pattern after `examples/form_validation.rs`
 
 ## Implementation Notes
 

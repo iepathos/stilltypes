@@ -15,6 +15,15 @@ created: 2025-12-22
 **Status**: draft
 **Dependencies**: none
 
+## Philosophy Alignment
+
+This specification follows the [Stillwater Philosophy](../../../stillwater/PHILOSOPHY.md):
+
+- **Parse, Don't Validate** (§7): `Latitude` and `Longitude` encode valid ranges at the type level. Once constructed, they're guaranteed within bounds—no runtime checks needed.
+- **Errors Should Tell Stories** (§3): Errors use geographic terminology ("91.5 degrees is outside valid latitude range") not generic messages.
+- **Types Guide, Don't Restrict** (§5): Simple types that make invalid coordinates impossible to represent.
+- **Pragmatism Over Purity** (§6): Uses `f64` directly rather than generic numerics—practical for real-world use.
+
 ## Context
 
 Geographic coordinates are fundamental to location-based applications, mapping services, logistics systems, and any application dealing with real-world positions. Latitude and longitude values have well-defined ranges that are frequently violated in user input or data imports, leading to subtle bugs or invalid map positions.
@@ -73,6 +82,10 @@ Add a `geo` feature to stilltypes providing refined types for latitude and longi
 - [ ] Unit tests cover invalid values: NaN, infinity, out of range
 - [ ] DMS conversion is accurate to within 0.0001 seconds
 - [ ] Serde integration tests pass when feature enabled
+- [ ] `examples/geo_validation.rs` demonstrates error accumulation pattern
+- [ ] README.md feature table updated with geo types
+- [ ] lib.rs feature table updated with geo types
+- [ ] `full` feature includes `geo`
 
 ## Technical Details
 
@@ -178,6 +191,72 @@ geo = []  # No external dependencies
 "invalid longitude: 200.0 degrees must be between -180 and 180 (example: -122.4194)"
 ```
 
+## Error Accumulation Example
+
+Following the "Fail Completely" pattern (PHILOSOPHY.md §2), geographic types integrate with `Validation::all()`:
+
+```rust
+use stilltypes::prelude::*;
+use stilltypes::geo::{Latitude, Longitude};
+use stillwater::validation::{Validation, ValidateAll};
+
+/// Raw location input from user or API.
+struct LocationInput {
+    lat: f64,
+    lon: f64,
+    name: String,
+}
+
+/// Validated location - coordinates guaranteed within valid ranges.
+struct ValidLocation {
+    lat: Latitude,
+    lon: Longitude,
+    name: String,
+}
+
+fn validate_location(input: LocationInput) -> Validation<ValidLocation, Vec<DomainError>> {
+    let lat_v = Validation::from_result(Latitude::new(input.lat).map_err(|e| vec![e]));
+    let lon_v = Validation::from_result(Longitude::new(input.lon).map_err(|e| vec![e]));
+
+    (lat_v, lon_v)
+        .validate_all()
+        .map(|(lat, lon)| ValidLocation { lat, lon, name: input.name })
+}
+
+// Returns both errors at once:
+// - "invalid latitude: 91.5 degrees must be between -90 and 90"
+// - "invalid longitude: 200.0 degrees must be between -180 and 180"
+```
+
+## Pure Core Example
+
+Once validated, geographic types enable pure business logic:
+
+```rust
+use std::f64::consts::PI;
+
+/// Pure function - no validation needed, types guarantee correctness.
+fn haversine_distance(lat1: &Latitude, lon1: &Longitude, lat2: &Latitude, lon2: &Longitude) -> f64 {
+    const EARTH_RADIUS_KM: f64 = 6371.0;
+
+    let lat1_rad = lat1.get().to_radians();
+    let lat2_rad = lat2.get().to_radians();
+    let dlat = (lat2.get() - lat1.get()).to_radians();
+    let dlon = (lon2.get() - lon1.get()).to_radians();
+
+    let a = (dlat / 2.0).sin().powi(2)
+        + lat1_rad.cos() * lat2_rad.cos() * (dlon / 2.0).sin().powi(2);
+    let c = 2.0 * a.sqrt().asin();
+
+    EARTH_RADIUS_KM * c
+}
+
+/// Pure function - operates on guaranteed-valid coordinates.
+fn is_in_northern_hemisphere(lat: &Latitude) -> bool {
+    lat.is_north()
+}
+```
+
 ## Dependencies
 
 - **Prerequisites**: None
@@ -202,9 +281,44 @@ geo = []  # No external dependencies
 
 ## Documentation Requirements
 
-- **Code Documentation**: Rustdoc with examples showing construction and DMS conversion
-- **User Documentation**: Update lib.rs feature table
-- **Examples**: Geographic validation example in examples/ directory
+### Code Documentation
+- Full rustdoc with examples for each type and trait
+- Module-level documentation explaining coordinate systems
+
+### lib.rs Feature Table Update
+Add row to the feature table in `src/lib.rs`:
+```markdown
+//! | `geo` | [`Latitude`](geo::Latitude), [`Longitude`](geo::Longitude) | - |
+```
+
+### README.md Updates
+Add to feature table:
+```markdown
+| `geo` | `Latitude`, `Longitude` | - |
+```
+
+Add usage section:
+```markdown
+### Geographic Coordinates
+
+\`\`\`rust,ignore
+use stilltypes::geo::{Latitude, Longitude, LatitudeExt};
+
+let lat = Latitude::new(37.7749)?;
+let lon = Longitude::new(-122.4194)?;
+
+assert!(lat.is_north());
+let (deg, min, sec, hemi) = lat.to_dms();
+// 37° 46' 29.64" N
+\`\`\`
+```
+
+### Example File
+Create `examples/geo_validation.rs`:
+- Demonstrate coordinate validation with error accumulation
+- Show Haversine distance calculation with validated coordinates
+- Include boundary cases (poles, antimeridian)
+- Pattern after `examples/form_validation.rs`
 
 ## Implementation Notes
 

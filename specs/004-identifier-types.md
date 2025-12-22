@@ -15,6 +15,15 @@ created: 2025-12-22
 **Status**: draft
 **Dependencies**: none
 
+## Philosophy Alignment
+
+This specification follows the [Stillwater Philosophy](../../../stillwater/PHILOSOPHY.md):
+
+- **Parse, Don't Validate** (§7): `Slug` encodes URL-safety at the type level. Once constructed, it's guaranteed to be a valid URL path component.
+- **Errors Should Tell Stories** (§3): Errors identify the specific invalid character and position, with examples of valid formats.
+- **Composition Over Complexity** (§4): Uses stillwater's string predicates as building blocks.
+- **Pragmatism Over Purity** (§6): Provides `from_title()` for practical conversion from prose, not just validation.
+
 ## Context
 
 Web applications frequently use human-readable identifiers in URLs, file paths, and database keys. These identifiers (often called "slugs") must be URL-safe, case-insensitive, and readable. Common examples include:
@@ -84,6 +93,10 @@ Add an `identifiers` feature to stilltypes providing refined types for common id
 - [ ] Unit tests cover invalid slugs: "Hello", "hello--world", "-hello", "hello-", "hello world"
 - [ ] `from_title()` handles edge cases: leading/trailing spaces, multiple spaces, special chars
 - [ ] Serde integration tests pass when feature enabled
+- [ ] `examples/slug_validation.rs` demonstrates error accumulation pattern
+- [ ] README.md feature table updated with identifier types
+- [ ] lib.rs feature table updated with identifier types
+- [ ] `full` feature includes `identifiers`
 
 ## Technical Details
 
@@ -247,6 +260,74 @@ identifiers = []  # No external dependencies
 "invalid slug: too long (150 chars, max 128) (example: my-first-post)"
 ```
 
+## Error Accumulation Example
+
+Following the "Fail Completely" pattern (PHILOSOPHY.md §2), identifier types integrate with `Validation::all()`:
+
+```rust
+use stilltypes::prelude::*;
+use stilltypes::identifiers::Slug;
+use stillwater::validation::{Validation, ValidateAll};
+
+/// Raw blog post input.
+struct BlogPostInput {
+    title: String,
+    slug: Option<String>,  // Optional custom slug
+    tags: Vec<String>,
+}
+
+/// Validated blog post with guaranteed-valid identifiers.
+struct ValidBlogPost {
+    title: String,
+    slug: Slug,
+    tags: Vec<Slug>,
+}
+
+fn validate_blog_post(input: BlogPostInput) -> Validation<ValidBlogPost, Vec<DomainError>> {
+    // Use custom slug if provided, otherwise generate from title
+    let slug_v = match input.slug {
+        Some(custom) => Validation::from_result(Slug::new(custom).map_err(|e| vec![e])),
+        None => Validation::from_result(Slug::from_title(&input.title).map_err(|e| vec![e])),
+    };
+
+    let tags_v: Validation<Vec<Slug>, Vec<DomainError>> = input.tags
+        .into_iter()
+        .map(|tag| Validation::from_result(Slug::from_title(&tag).map_err(|e| vec![e])))
+        .collect();
+
+    (slug_v, tags_v)
+        .validate_all()
+        .map(|(slug, tags)| ValidBlogPost {
+            title: input.title,
+            slug,
+            tags,
+        })
+}
+```
+
+## Pure Core Example
+
+Once validated, identifier types enable pure URL generation:
+
+```rust
+/// Pure function - generates blog post URL from validated slug.
+fn blog_post_url(slug: &Slug) -> String {
+    format!("/posts/{}", slug.get())
+}
+
+/// Pure function - generates tag archive URL from validated slugs.
+fn tag_url(tag: &Slug) -> String {
+    format!("/tags/{}", tag.get())
+}
+
+/// Pure function - generates sitemap entries (no validation needed).
+fn sitemap_entries(posts: &[(String, Slug)]) -> Vec<String> {
+    posts.iter()
+        .map(|(_, slug)| format!("https://example.com/posts/{}", slug.get()))
+        .collect()
+}
+```
+
 ## Dependencies
 
 - **Prerequisites**: None
@@ -279,9 +360,44 @@ identifiers = []  # No external dependencies
 
 ## Documentation Requirements
 
-- **Code Documentation**: Rustdoc with pattern description and examples
-- **User Documentation**: Update lib.rs feature table
-- **Examples**: Blog URL generation example
+### Code Documentation
+- Full rustdoc with examples for each type and trait
+- Module-level documentation explaining slug patterns and use cases
+
+### lib.rs Feature Table Update
+Add row to the feature table in `src/lib.rs`:
+```markdown
+//! | `identifiers` | [`Slug`](identifiers::Slug) | - |
+```
+
+### README.md Updates
+Add to feature table:
+```markdown
+| `identifiers` | `Slug` | - |
+```
+
+Add usage section:
+```markdown
+### URL Slugs
+
+\`\`\`rust,ignore
+use stilltypes::identifiers::{Slug, SlugExt};
+
+// Validate existing slug
+let slug = Slug::new("my-first-post".to_string())?;
+
+// Convert from title
+let slug = Slug::from_title("My First Blog Post!")?;
+assert_eq!(slug.get(), "my-first-blog-post");
+\`\`\`
+```
+
+### Example File
+Create `examples/slug_validation.rs`:
+- Demonstrate blog post slug generation with error accumulation
+- Show `from_title()` conversion from various inputs
+- Include tag slugification
+- Pattern after `examples/form_validation.rs`
 
 ## Implementation Notes
 

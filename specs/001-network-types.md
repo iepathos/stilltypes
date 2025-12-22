@@ -15,6 +15,15 @@ created: 2025-12-22
 **Status**: draft
 **Dependencies**: none
 
+## Philosophy Alignment
+
+This specification follows the [Stillwater Philosophy](../../../stillwater/PHILOSOPHY.md):
+
+- **Parse, Don't Validate** (§7): Network types encode validity at the type level. Once you have an `Ipv4Addr`, it's guaranteed valid—no runtime checks needed downstream.
+- **Errors Should Tell Stories** (§3): Each type produces `DomainError` with format name, invalid value, specific reason, and a valid example.
+- **Composition Over Complexity** (§4): Simple predicates that can be combined with stillwater's `And`, `Or`, `Not`.
+- **Pragmatism Over Purity** (§6): Uses `std::net` for parsing rather than reimplementing—better Rust, not theoretical purity.
+
 ## Context
 
 Network programming is one of the most common use cases for refined types. IP addresses, domain names, and port numbers are ubiquitous in web applications, APIs, configuration files, and system administration tools. Currently, developers must manually validate these formats or use raw strings/integers, leading to potential runtime errors.
@@ -73,6 +82,10 @@ Add a `network` feature to stilltypes providing refined types for IP addresses (
 - [ ] Unit tests cover valid cases, invalid cases, and edge cases for each type
 - [ ] Integration tests verify serde round-trip when feature enabled
 - [ ] Error messages include format examples (e.g., "example: 192.168.1.1")
+- [ ] `examples/network_validation.rs` demonstrates error accumulation pattern
+- [ ] README.md feature table updated with network types
+- [ ] lib.rs feature table updated with network types
+- [ ] `full` feature includes `network`
 
 ## Technical Details
 
@@ -162,6 +175,70 @@ network-idn = ["network", "dep:idna"]
 "invalid port: 70000 is out of range 1-65535 (example: 8080)"
 ```
 
+## Error Accumulation Example
+
+Following the "Fail Completely" pattern (PHILOSOPHY.md §2), network types integrate with `Validation::all()`:
+
+```rust
+use stilltypes::prelude::*;
+use stilltypes::network::{Ipv4Addr, Port, DomainName};
+use stillwater::validation::{Validation, ValidateAll};
+
+/// Raw server configuration input.
+struct ServerConfigInput {
+    host: String,
+    port: String,
+    allowed_ips: Vec<String>,
+}
+
+/// Validated server configuration - types guarantee validity.
+struct ValidServerConfig {
+    host: DomainName,
+    port: Port,
+    allowed_ips: Vec<Ipv4Addr>,
+}
+
+fn validate_config(input: ServerConfigInput) -> Validation<ValidServerConfig, Vec<DomainError>> {
+    let host_v = Validation::from_result(
+        DomainName::new(input.host).map_err(|e| vec![e])
+    );
+    let port_v = Validation::from_result(
+        input.port.parse::<u16>()
+            .map_err(|_| vec![DomainError {
+                format_name: "port",
+                value: input.port.clone(),
+                reason: DomainErrorKind::InvalidFormat { expected: "number 1-65535" },
+                example: "8080",
+            }])
+            .and_then(|p| Port::new(p).map_err(|e| vec![e]))
+    );
+    let ips_v: Validation<Vec<Ipv4Addr>, Vec<DomainError>> = input.allowed_ips
+        .into_iter()
+        .map(|ip| Validation::from_result(Ipv4Addr::new(ip).map_err(|e| vec![e])))
+        .collect();
+
+    (host_v, port_v, ips_v)
+        .validate_all()
+        .map(|(host, port, allowed_ips)| ValidServerConfig { host, port, allowed_ips })
+}
+```
+
+## Pure Core Example
+
+Once validated, network types enable pure business logic without defensive checks:
+
+```rust
+/// Pure function - no validation needed, types guarantee correctness.
+fn is_internal_service(host: &DomainName, port: &Port) -> bool {
+    host.get().ends_with(".internal") && port.is_privileged()
+}
+
+/// Pure function - operates on guaranteed-valid data.
+fn format_bind_address(ip: &Ipv4Addr, port: &Port) -> String {
+    format!("{}:{}", ip.get(), port.get())
+}
+```
+
 ## Dependencies
 
 - **Prerequisites**: None (first spec in series)
@@ -185,9 +262,45 @@ network-idn = ["network", "dep:idna"]
 
 ## Documentation Requirements
 
-- **Code Documentation**: Full rustdoc with examples for each type and trait
-- **User Documentation**: Update lib.rs feature table
-- **README**: Add network feature to examples
+### Code Documentation
+- Full rustdoc with examples for each type and trait
+- Module-level documentation explaining the feature
+
+### lib.rs Feature Table Update
+Add row to the feature table in `src/lib.rs`:
+```markdown
+//! | `network` | [`Ipv4Addr`](network::Ipv4Addr), [`Ipv6Addr`](network::Ipv6Addr), [`DomainName`](network::DomainName), [`Port`](network::Port) | - |
+```
+
+### README.md Updates
+Add to feature table:
+```markdown
+| `network` | `Ipv4Addr`, `Ipv6Addr`, `DomainName`, `Port` | - |
+```
+
+Add usage section:
+```markdown
+### Network (IP, Domain, Port)
+
+\`\`\`rust,ignore
+use stilltypes::network::{Ipv4Addr, Port, DomainName, Ipv4Ext, PortExt};
+
+let ip = Ipv4Addr::new("192.168.1.1".to_string())?;
+assert!(ip.is_private());
+
+let port = Port::new(443)?;
+assert!(port.is_privileged());
+
+let domain = DomainName::new("api.example.com".to_string())?;
+\`\`\`
+```
+
+### Example File
+Create `examples/network_validation.rs`:
+- Demonstrate server config validation with error accumulation
+- Show IP allowlist validation
+- Include both valid and invalid input examples
+- Pattern after `examples/form_validation.rs`
 
 ## Implementation Notes
 

@@ -1,10 +1,10 @@
 # Stilltypes
 
-> Domain-specific refined types for the Stillwater ecosystem
+> Domain-specific refined types for Rust
 
 [![Crates.io](https://img.shields.io/crates/v/stilltypes.svg)](https://crates.io/crates/stilltypes)
 [![Documentation](https://docs.rs/stilltypes/badge.svg)](https://docs.rs/stilltypes)
-[![License](https://img.shields.io/crates/l/stilltypes.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT)](LICENSE)
 
 Stilltypes provides production-ready domain predicates and refined types that integrate seamlessly with [stillwater](https://github.com/iepathos/stillwater). Validate emails, URLs, phone numbers, and more with errors that accumulate and types that prove validity.
 
