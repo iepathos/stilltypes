@@ -25,13 +25,14 @@ creditcard = { version = "0.1", optional = true }
 
 [features]
 default = ["email", "url"]
-full = ["email", "url", "uuid", "phone", "financial"]
+full = ["email", "url", "uuid", "phone", "financial", "network"]
 
 email = ["dep:email_address"]
 url = ["dep:url"]
 uuid = ["dep:uuid"]
 phone = ["dep:phonenumber"]
 financial = ["dep:iban", "dep:creditcard"]
+network = []
 
 serde = ["stillwater/serde", "uuid?/serde", "url?/serde"]
 
@@ -47,4 +48,8 @@ required-features = ["full"]
 
 [[example]]
 name = "api_handler"
+required-features = ["full"]
+
+[[example]]
+name = "network_validation"
 required-features = ["full"]

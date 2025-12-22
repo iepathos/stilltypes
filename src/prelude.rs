@@ -44,3 +44,9 @@ pub use crate::phone::{PhoneNumber, PhoneNumberExt, ValidPhoneNumber};
 pub use crate::financial::{
     CreditCardExt, CreditCardNumber, Iban, IbanExt, ValidCreditCard, ValidIban,
 };
+
+#[cfg(feature = "network")]
+pub use crate::network::{
+    DomainName, DomainNameExt, Ipv4Addr, Ipv4Ext, Ipv6Addr, Ipv6Ext, Port, PortExt,
+    ValidDomainName, ValidIpv4, ValidIpv6, ValidPort,
+};
