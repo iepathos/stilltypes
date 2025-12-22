@@ -61,3 +61,6 @@ pub use crate::geo::{
 pub use crate::numeric::{
     Percentage, PercentageExt, UnitInterval, UnitIntervalExt, ValidPercentage, ValidUnitInterval,
 };
+
+#[cfg(feature = "identifiers")]
+pub use crate::identifiers::{Slug, SlugExt, ValidSlug};

@@ -45,6 +45,7 @@
 //! | `network` | [`Ipv4Addr`](network::Ipv4Addr), [`Ipv6Addr`](network::Ipv6Addr), [`DomainName`](network::DomainName), [`Port`](network::Port) | - |
 //! | `geo` | [`Latitude`](geo::Latitude), [`Longitude`](geo::Longitude) | - |
 //! | `numeric` | [`Percentage`](numeric::Percentage), [`UnitInterval`](numeric::UnitInterval) | - |
+//! | `identifiers` | [`Slug`](identifiers::Slug) | - |
 //! | `serde` | Serialize/Deserialize for all types | - |
 //! | `full` | All of the above | - |
 //!
@@ -121,5 +122,8 @@ pub mod geo;
 
 #[cfg(feature = "numeric")]
 pub mod numeric;
+
+#[cfg(feature = "identifiers")]
+pub mod identifiers;
 
 pub use error::{DomainError, DomainErrorKind};

@@ -43,6 +43,7 @@ stilltypes = { version = "0.1", default-features = false, features = ["email", "
 | `network` | `Ipv4Addr`, `Ipv6Addr`, `DomainName`, `Port` | - |
 | `geo` | `Latitude`, `Longitude` | - |
 | `numeric` | `Percentage`, `UnitInterval` | - |
+| `identifiers` | `Slug` | - |
 | `serde` | Serialize/Deserialize for all types | - |
 | `full` | All of the above | - |
 
@@ -233,6 +234,24 @@ let as_percent = probability.to_percentage();  // 75%
 let half = Percentage::from_decimal(0.5)?;  // 50%
 ```
 
+### URL Slugs
+
+```rust,ignore
+use stilltypes::identifiers::{Slug, SlugExt};
+
+// Validate existing slug
+let slug = Slug::new("my-first-post".to_string())?;
+assert_eq!(slug.get(), "my-first-post");
+
+// Convert from title
+let slug = Slug::from_title("My First Blog Post!")?;
+assert_eq!(slug.get(), "my-first-blog-post");
+
+// Error on invalid slugs
+let invalid = Slug::new("Invalid Slug".to_string());
+assert!(invalid.is_err());
+```
+
 ## When to Use Stilltypes
 
 **Use Stilltypes when:**
@@ -264,6 +283,7 @@ See the `examples/` directory for complete working examples:
 - `network_validation.rs` - Server config validation with IP/port/domain
 - `geo_validation.rs` - Geographic coordinate validation with DMS conversion
 - `discount_validation.rs` - Percentage and pricing calculations with numeric types
+- `slug_validation.rs` - URL slug validation and title conversion
 
 Run with:
 
@@ -273,6 +293,7 @@ cargo run --example api_handler --features full
 cargo run --example network_validation --features full
 cargo run --example geo_validation --features full
 cargo run --example discount_validation --features full
+cargo run --example slug_validation --features full
 ```
 
 ## The Stillwater Ecosystem
