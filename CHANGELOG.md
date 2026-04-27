@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-04-27
+
+Patch release with refreshed dependency locks and release metadata.
+
+### Changed
+
+- Regenerated `Cargo.lock` with the latest Rust 1.89-compatible dependency set.
+- Updated GitHub Actions artifact upload dependency in CI workflows.
+
 ## [0.2.0] - 2025-12-22
 
 Significant expansion of Stilltypes with four new validation modules covering network types, geographic coordinates, bounded numerics, and identifiers.
@@ -134,5 +143,6 @@ Initial release of Stilltypes - domain-specific refined types for the Stillwater
 | `serde` | Serialization support | |
 | `full` | All validators | |
 
+[0.2.1]: https://github.com/iepathos/stilltypes/releases/tag/v0.2.1
 [0.2.0]: https://github.com/iepathos/stilltypes/releases/tag/v0.2.0
 [0.1.0]: https://github.com/iepathos/stilltypes/releases/tag/v0.1.0
