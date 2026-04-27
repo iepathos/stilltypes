@@ -268,7 +268,9 @@ install-tools:
 
 # Install additional development tools
 install-extras:
-    cargo install cargo-expand cargo-machete cargo-deny cargo-udeps
+    cargo install cargo-expand
+    cargo install cargo-machete --locked
+    cargo install cargo-deny cargo-udeps
 
 # === RELEASE ===
 
