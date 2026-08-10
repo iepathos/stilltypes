@@ -15,6 +15,10 @@ Patch release updating Rust dependencies and CI actions.
 - Updated the GitHub Actions dependencies for checkout, caching, and Just setup.
 - Installed `cargo-machete` with locked dependencies in the development toolchain.
 
+### Fixed
+
+- Restored Rust 1.89 compatibility for the security audit and changed the supply-chain check to validate `Cargo.lock` without requiring the latest compatible dependency versions.
+
 ## [0.2.1] - 2026-04-27
 
 Patch release with refreshed dependency locks and release metadata.
